@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="dutCommand" Id="{51a7868a-2ef0-47fc-8061-8341e31213d0}">
+    <Declaration><![CDATA[TYPE dutCommand :
+STRUCT
+	eCommand 	: E_CommandList;
+	arrParam	: ARRAY [1..5] OF LINT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,74 @@
+{
+  "server": {
+    "type": "tcp",
+    "port": 6023
+  },
+  "simulation": {
+    "enabled": true
+  },
+  "initialization": {
+    "total_time": 15
+  },
+  "operations": {
+    "home": {
+      "duration": 5
+    },
+    "scan": {
+      "duration": 10
+    }
+  },
+  "states": [
+    "init",
+    "standby",
+    "home",
+    "scan",
+    "fault"
+  ],
+  "transitions": [
+    {
+      "trigger": "complete_init",
+      "source": "init",
+      "dest": "standby"
+    },
+    {
+      "trigger": "home",
+      "source": "standby",
+      "dest": "home"
+    },
+    {
+      "trigger": "complete_home",
+      "source": "home",
+      "dest": "standby"
+    },
+    {
+      "trigger": "scan",
+      "source": "standby",
+      "dest": "scan"
+    },
+    {
+      "trigger": "complete_scan",
+      "source": "scan",
+      "dest": "standby"
+    },
+    {
+      "trigger": "fault",
+      "source": "*",
+      "dest": "fault"
+    }
+  ],
+  "methods": {
+    "on_enter_init": "MachineSystem.on_enter_init",
+    "on_enter_home": "MachineSystem.on_enter_home",
+    "on_enter_scan": "MachineSystem.on_enter_scan",
+    "on_enter_fault": "MachineSystem.on_enter_fault"
+  },
+  "commands": [
+    "HOM",
+    "SCAN",
+    "MTP",
+    "MOVR",
+    "MOVA",
+    "STAT",
+    "CAL"
+  ]
+}

@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="stServoInterface" Id="{84d2f1f9-e34b-409f-994c-e00e41384e89}">
+    <Declaration><![CDATA[TYPE stServoInterface :
+STRUCT
+	/// In_Outs
+	ioAxisRef			: Axis_Ref;
+	/// Inputs
+	bDriveEnable		: BOOL;
+	bStopMotion			: BOOL;
+	bFaultReset			: BOOL;
+	bTriggerMove		: BOOL;
+	bJogFWD				: BOOL;
+	bJogRev				: BOOL;
+	bHome				: BOOL;
+	bDemoModeActive		: BOOL;
+	bDemoModeStart		: BOOL;
+	bDemoModeStop		: BOOL;
+	iMotionSelect		: INT;
+	rSpeed				: REAL;
+	rAccelDecel			: REAL;
+	rPosition			: REAL;
+	/// Outputs
+	bDriveEnabled		: BOOL;
+	bStopped			: BOOL;
+	bFaulted			: BOOL;
+	bMoving				: BOOL;
+	bNotMoving			: BOOL;
+	bAtHome				: BOOL;
+	bAccelerating		: BOOL;
+	bDecelerating		: BOOL;
+	bDemoModePermissive	: BOOL;
+	bInposition			: BOOL;
+	bInVelocity			: BOOL;
+	rActualSpeed		: REAL;	
+	rActualPosition		: REAL;
+
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

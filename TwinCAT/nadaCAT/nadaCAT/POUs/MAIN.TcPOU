@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="MAIN" Id="{9767283b-cca1-4624-be02-ae2381d3ffbe}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// System Control
+PLCSystem.iTaskIdx  := GETCURTASKINDEXEX();
+System(iTaskIdx 	:= PLCSystem.iTaskIdx,
+	   bFirstCycle  := PLCSystem.bFirstCycle);
+
+ServoGVLs.coeRead(Axis:= servoGVLs.servo1Interface.ioAxisRef,
+				  Index := 16#2191,
+				  SubIndex := 16#01,
+				  Execute := servoGVLs.toggle,
+				  Busy =>,
+				  pDstBuf := ADR(servoGVLs.catchWord),
+				  BufLen := SIZEOF(servoGVLs.catchWord));
+
+// TCP Connection
+
+TCPComm(cmdData => gvlMotion.cmdData);
+// Mode Control
+gvlMotion.autoMode := NOT gvlMotion.manualMode;
+IF gvlMotion.manualMode THEN
+	gvlMotion.servo1(stServoInterface := servoGVLs.servo1Interface);
+END_IF
+// Servo 1 Auto Control via Server
+gvlMotion.bank1(
+	   cmdData := gvlMotion.cmdData,
+	   bEnableDrive := gvlMotion.bEnableDrive,
+	   bStartDrive := gvlMotion.bStartDrive,
+	   bInterlockOK := gvlMotion.bInterlockOK,
+	   bTriggerDefault := gvlMotion.bTriggerDefault,
+	   driveStatus => gvlMotion.driveStatus,
+	   mcBankAxis := ServoGVLs.servo1Interface);
+]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="5" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="116" Count="3" />
+      <LineId Id="121" Count="1" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="7" Count="3" />
+      <LineId Id="100" Count="0" />
+      <LineId Id="110" Count="2" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="76" Count="1" />
+      <LineId Id="79" Count="2" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

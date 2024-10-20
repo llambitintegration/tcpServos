@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="gvlMotion" Id="{7afcf311-d57f-4d40-9ba6-24c562e7545f}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+// Manual Control
+servo1			: FB_ManualMotionControl;
+bank1			: FB_AutoMotionControl;
+manualMode 		: BOOL := TRUE;
+autoMode		: BOOL;
+// Server Control
+cmdData 		: dutCommand;
+bEnableDrive	: BOOL := FALSE;
+bStartDrive		: BOOL := FALSE;
+bTriggerDefault : BOOL := FALSE;
+bInterlockOK	: BOOL := TRUE;
+mcBankAxis		: stServoInterface;
+driveStatus 	: ST_AxisStatus;	
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

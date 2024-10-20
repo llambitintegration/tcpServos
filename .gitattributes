@@ -1,0 +1,42 @@
+# Python files treated as text
+*.py text
+
+# TwinCAT files treated as text
+*.tsproj text
+*.tmc text
+*.tpy text
+*.TcPOU text
+*.TcDUT text
+*.TcGVL text
+*.TcIO text
+
+# Handle specific binary files correctly
+*.exe binary
+*.dll binary
+*.lib binary
+*.dat binary
+*.zip binary
+*.7z binary
+*.bin binary
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.bmp binary
+
+# Common line endings handling
+*.bat eol=crlf
+*.sh eol=lf
+
+##### LFS #####
+
+# Large files tracked by Git LFS
+*.tmc filter=lfs diff=lfs merge=lfs
+*.app filter=lfs diff=lfs merge=lfs
+*.bin filter=lfs diff=lfs merge=lfs
+*.h5 filter=lfs diff=lfs merge=lfs
+*.pkl filter=lfs diff=lfs merge=lfs
+*.zip filter=lfs diff=lfs merge=lfs
+*.tar.gz filter=lfs diff=lfs merge=lfs
+*.jpg filter=lfs diff=lfs merge=lfs
+*.png filter=lfs diff=lfs merge=lfs
+*.mp4 filter=lfs diff=lfs merge=lfs

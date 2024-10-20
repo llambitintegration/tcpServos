@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="stConfigParams" Id="{efdfac97-39c5-42e0-aa01-dc1d06f016ec}">
+    <Declaration><![CDATA[TYPE stConfigParams :
+STRUCT
+	iSpeed		: INT;  		// Stocker speed
+	iAccel		: INT;  		// Stocker acceleration
+	iDecel		: INT;  		// Stocker deceleration
+	sRamp		: STRING(255);  // Stocker ramp style
+	iPodPos		: INT;  		// Stocker pod position, given pod
+	iScStart	: INT;  		// Stocker start scanning position
+	iScEnd		: INT;  		// Stocker end scanning position
+	iScThick	: INT;  		// Average wafer thickness
+	iScExclLo	: INT;  		// Low wafer exclusion zone (in percent)
+	iScExclHi	: INT;			// High wafer exclusion zone (in percent)
+	iPdSlot		: INT;  		// Pod slot count
+	iPdBtm		: INT;  		// Pod bottom slot position
+	iPdTop		: INT;  		// Pod top slot position
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

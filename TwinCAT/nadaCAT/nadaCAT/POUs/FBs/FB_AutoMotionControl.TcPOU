@@ -1,0 +1,418 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_AutoMotionControl" Id="{f9f120a5-144c-4107-95cf-b385a2b4b776}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_AutoMotionControl
+VAR_INPUT
+	cmdData			: 	dutCommand;
+	bEnableDrive	:   BOOL;
+	bStartDrive		: 	BOOL;
+	bInterlockOK	:	BOOL := TRUE;
+	bTriggerDefault	: 	BOOL := TRUE;
+END_VAR
+VAR_OUTPUT
+	driveStatus		: ST_AxisStatus;
+END_VAR
+VAR_IN_OUT
+	mcBankAxis		:	stServoInterface;
+END_VAR
+VAR
+	eCommand		: 	E_CommandList;
+	rCmdMova		:	REAL := 0.0;
+	rCmdMovr		: 	REAL := 0.0;
+	bInitialized	: 	BOOL := FALSE;
+	eState			: 	E_ServoState := E_ServoState.DEFAULT;
+	// Admin Controls
+	fbBankStatus	: MC_ReadStatus;
+	fbBankEnable	: MC_Power;
+	fbBankReset		: MC_Reset;
+	mcBufferMode	: MC_BufferMode := MC_BufferMode.MC_Aborting;
+	mcOptions 		: ST_PowerOptions;
+	powerOutputs	: mcOutputs;
+	resetOutputs	: mcOutputs;
+	bReset			: BOOL;
+	// Homing Controls
+	fbBankHome		: MC_Home;
+	homeOptions		: ST_HomingOptions;
+	dummyCam		: BOOL;
+	homeOutputs		: mcOutputs;
+	
+	// Motion Controls
+	dummyRobotClear	: BOOL;
+	fbBankMovA		: MC_MoveAbsolute;
+	movaOption		: ST_MoveOptions;
+	fbBankMovR		: MC_MoveRelative;
+	movrOptions		: ST_MoveOptions;
+	fbBankStop		: MC_Stop;		
+	fbBankHalt		: MC_Halt;
+	movaOutputs		: mcOutputs;
+	movrOutputs		: mcOutputs;
+	stopOutputs		: mcOutputs;
+	haltOutputs		: mcOutputs;
+	runOnce			: BOOL;	//Oneshot for motion inits
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[StateMachine();
+ServoInit();
+IF eState >= E_ServoState.HOMING THEN
+	ServoMotion();
+END_IF
+
+// Motion Inits
+
+// Status
+fbBankStatus(
+	Axis:= mcBankAxis.ioAxisRef, 
+	Enable:= TRUE, 
+	Valid=> , 
+	Busy=> , 
+	Error=> , 
+	ErrorID=> , 
+	ErrorStop=> , 
+	Disabled=> , 
+	Stopping=> , 
+	StandStill=> , 
+	DiscreteMotion=> , 
+	ContinuousMotion=> , 
+	SynchronizedMotion=> , 
+	Homing=> , 
+	ConstantVelocity=> , 
+	Accelerating=> , 
+	Decelerating=> , 
+	Status=> driveStatus);
+
+// Enable
+fbBankEnable(AXIS := mcBankAxis.ioAxisRef,
+			 Enable_Positive := TRUE,
+			 Enable_Negative := TRUE,
+			 Override := 100,
+			 BufferMode := mcBufferMode,
+			 Options := mcOptions,
+			 Status => powerOutputs.Status,
+			 Busy => powerOutputs.Busy,
+			 Active => powerOutputs.Active,
+			 Error => powerOutputs.Error,
+			 ErrorID => powerOutputs.ErrorID);
+// Reset
+fbBankReset(Axis:=mcBankAxis.ioAxisRef);
+// Stop
+fbBankStop(
+	Axis:= mcBankAxis.ioAxisRef, 
+	Done=> stopOutputs.Done, 
+	Busy=> stopOutputs.Busy, 
+	Active=> stopOutputs.Active, 
+	CommandAborted=> stopOutputs.CommandAborted, 
+	Error=> stopOutputs.Error, 
+	ErrorID=> stopOutputs.ErrorID);
+
+// Init HOM
+fbBankHome(
+	Axis:= mcBankAxis.ioAxisRef, 
+	Position:= DEFAULT_HOME_POSITION, 
+	HomingMode:= MC_DefaultHoming, 
+	BufferMode:= mcBufferMode, 
+	Options:= homeOptions, 
+	bCalibrationCam:= (ABS(mcBankAxis.rActualPosition) <= 0.001), 
+	Done=> homeOutputs.Done, 
+	Busy=> homeOutputs.Busy, 
+	Active=> homeOutputs.Active, 
+	CommandAborted=> homeOutputs.CommandAborted, 
+	Error=> homeOutputs.Error, 
+	ErrorID=> homeOutputs.ErrorID);
+
+// Init MOVA
+fbBankMovA(
+	Axis:= mcBankAxis.ioAxisRef, 
+	Position:= rCmdMova, 
+	Velocity:= 200, 
+	BufferMode:= mcBufferMode, 
+	Options:= movaOption, 
+	Done=> movaOutputs.Done, 
+	Busy=> movaOutputs.Busy, 
+	Active=> movaOutputs.Active, 
+	CommandAborted=> movaOutputs.CommandAborted, 
+	Error=> movaOutputs.Error, 
+	ErrorID=> movaOutputs.ErrorID);
+
+// Init MOVR
+fbBankMovR(
+	Axis:= mcBankAxis.ioAxisRef, 
+	Distance:= rCmdMovr, 
+	Velocity:= 200, 
+	BufferMode:= mcBufferMode, 
+	Options:= movrOptions, 
+	Done=> movrOutputs.Done, 
+	Busy=> movrOutputs.Busy, 
+	Active=> movrOutputs.Active, 
+	CommandAborted=> movrOutputs.CommandAborted, 
+	Error=> movrOutputs.Error, 
+	ErrorID=> movrOutputs.ErrorID);]]></ST>
+    </Implementation>
+    <Method Name="ServoInit" Id="{ccec5a85-2491-47c9-a77a-edd9d5e965cf}">
+      <Declaration><![CDATA[METHOD ServoInit : BOOL
+VAR_INPUT
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[eCommand := cmdData.eCommand;
+
+CASE eState OF
+	E_ServoState.DEFAULT:
+		
+		bTriggerDefault := FALSE;
+		bInitialized	:= TRUE;
+
+	E_ServoState.OFF, E_ServoState.DISABLED:
+		fbBankEnable.Enable := FALSE;
+		fbBankHome.Execute  := FALSE;
+		fbBankMovA.Execute  := FALSE;
+		fbBankMovR.Execute	:= FALSE;
+    
+    E_ServoState.ENABLED:
+		fbBankEnable.Enable := bStartDrive AND bEnableDrive;
+		// Check w/ TCP to ensure buffer is clear
+		
+	E_ServoState.STANDBY:
+		IF eCommand = E_CommandList.MOVA THEN
+			rCmdMova := LINT_TO_REAL(cmdData.arrParam[1])/1000.0;
+			eState := E_ServoState.MOVE_ABS;
+		ELSIF eCommand = E_CommandList.MOVR THEN
+			rCmdMovr := LINT_TO_REAL(cmdData.arrParam[1])/1000.0;
+			eState := E_ServoState.MOVE_REL;
+		ELSIF eCommand = E_CommandList.SCAN THEN
+			eState := E_ServoState.MOVE_SCAN;
+		END_IF
+	
+	E_ServoState.FAULTED:
+		fbBankReset.Execute := bReset;
+    
+	E_ServoState.HOMING:
+		fbBankHome.Execute := TRUE;
+		
+		IF homeOutputs.Error THEN
+			eState := E_ServoState.FAULTED;
+		ELSE
+			IF homeOutputs.Active THEN
+				IF driveStatus.Homed THEN
+					fbBankHome.Execute := FALSE; // Stop homing once complete
+					eState := E_ServoState.STANDBY;
+				END_IF
+			END_IF
+		END_IF
+END_CASE
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ServoMotion" Id="{1f10cfcc-e694-46fa-a9a0-0b77729911a3}">
+      <Declaration><![CDATA[METHOD ServoMotion : BOOL
+VAR_INPUT
+END_VAR
+VAR_IN_OUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState <> E_ServoState.INTERLOCK_MOTION THEN
+	CASE eState OF
+
+		E_ServoState.HOMING:
+			fbBankHome.Execute := NOT (driveStatus.Moving OR driveStatus.Error);
+
+		E_ServoState.MOVE_ABS:
+			fbBankMovA.Position := rCmdMova;
+			fbBankMovA.Execute := NOT (driveStatus.Moving OR driveStatus.Error);
+		
+		E_ServoState.MOVE_REL:
+			fbBankMovR.Distance := rCmdMovr;
+			fbBankMovR.Execute := NOT (driveStatus.Moving OR driveStatus.Error);  // Trigger true until movement detected
+			
+		E_ServoState.MOVE_SCAN:
+			// Handle multiple scan input types
+			// SCAN (no parameters), full range
+			// SCAN 0, full range
+			// SCAN 1, scan position 1
+			// SCAN 1,13 scan from position 1 to 13
+	END_CASE
+ELSIF eState = E_ServoState.INTERLOCK_MOTION THEN
+    fbBankStop.Execute := NOT (driveStatus.Moving);
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="StateMachine" Id="{b898bcb6-c138-4696-8c4b-9169976bcff5}">
+      <Declaration><![CDATA[METHOD StateMachine : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Interrupt
+IF gvlMotion.manualMode THEN
+	eState := E_ServoState.OFF;
+END_IF
+
+// State Machine
+CASE eState OF
+    E_ServoState.DEFAULT:
+		IF bInitialized THEN
+			eState := E_ServoState.DISABLED;
+		END_IF
+	E_ServoState.OFF:
+        IF NOT gvlMotion.manualMode THEN
+			eState := E_ServoState.DEFAULT;
+		END_IF
+
+    E_ServoState.DISABLED:
+		
+		IF bEnableDrive AND NOT (driveStatus.Error) THEN
+            eState := E_ServoState.ENABLED;
+        ELSIF driveStatus.Error THEN
+            eState := E_ServoState.FAULTED;
+        END_IF
+		
+
+    
+    E_ServoState.ENABLED:
+
+		IF bStartDrive AND fbBankEnable.Status AND NOT driveStatus.Error THEN
+            eState := E_ServoState.STANDBY;
+        ELSIF driveStatus.Error THEN
+            eState := E_ServoState.FAULTED;
+        END_IF
+		
+        // Placeholder for TCP check
+
+    E_ServoState.STANDBY:
+		IF eCommand = E_CommandList.HOM THEN
+            eState := E_ServoState.HOMING;
+		ELSIF eCommand = E_CommandList.MOVA THEN
+			eState := E_ServoState.MOVE_ABS;
+		ELSIF eCommand = E_CommandList.MOVR THEN
+			eState := E_ServoState.MOVE_REL;
+		END_IF
+	
+	E_ServoState.HOMING:
+			IF driveStatus.Error THEN
+				eState := E_ServoState.FAULTED;
+			ELSIF driveStatus.Homed THEN
+				eState := E_ServoState.STANDBY;
+			END_IF
+
+	E_ServoState.MOVE_ABS:
+		IF driveStatus.InTargetPosition THEN
+			eState := E_ServoState.STANDBY;
+		END_IF
+		IF driveStatus.Error THEN
+			eState := E_ServoState.FAULTED;
+		END_IF
+	
+	E_ServoState.MOVE_REL:
+		IF driveStatus.InTargetPosition THEN
+			eState := E_ServoState.STANDBY;
+		END_IF
+		IF driveStatus.Error THEN
+			eState := E_ServoState.FAULTED;
+		END_IF
+	
+	E_ServoState.INTERLOCK_MOTION:
+		IF bInterlockOK AND driveStatus.NotMoving THEN
+        	eState := E_ServoState.STANDBY; // Return to standby if motion has stopped
+    	END_IF
+	E_ServoState.FAULTED:
+	
+		IF NOT driveStatus.Error THEN
+			IF driveStatus.Disabled THEN
+				eState := E_ServoState.DISABLED;
+			ELSIF driveStatus.Error THEN
+				eState := E_ServoState.FAULTED;
+			ELSIF driveStatus.Homing THEN
+				eState := E_ServoState.HOMING;
+			ELSIF driveStatus.NotMoving THEN
+				eState := E_ServoState.STANDBY;
+			END_IF
+		END_IF
+		
+//        // Catch-all case to prevent transition to DEFAULT unexpectedly
+//        eState := E_ServoState.STANDBY;  // Default safe state
+//        // Add a debug output here if necessary to track transitions
+//        fbBankStatus.Enable := FALSE;  // Explicitly disable status polling if entering an invalid state
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_AutoMotionControl">
+      <LineId Id="446" Count="93" />
+      <LineId Id="106" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_AutoMotionControl.ServoInit">
+      <LineId Id="455" Count="1" />
+      <LineId Id="110" Count="0" />
+      <LineId Id="340" Count="0" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="433" Count="0" />
+      <LineId Id="447" Count="0" />
+      <LineId Id="432" Count="0" />
+      <LineId Id="431" Count="0" />
+      <LineId Id="449" Count="3" />
+      <LineId Id="152" Count="1" />
+      <LineId Id="448" Count="0" />
+      <LineId Id="434" Count="0" />
+      <LineId Id="442" Count="0" />
+      <LineId Id="435" Count="1" />
+      <LineId Id="457" Count="0" />
+      <LineId Id="437" Count="1" />
+      <LineId Id="458" Count="0" />
+      <LineId Id="439" Count="1" />
+      <LineId Id="462" Count="0" />
+      <LineId Id="461" Count="0" />
+      <LineId Id="441" Count="0" />
+      <LineId Id="443" Count="0" />
+      <LineId Id="159" Count="0" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="444" Count="0" />
+      <LineId Id="202" Count="10" />
+      <LineId Id="171" Count="0" />
+      <LineId Id="339" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_AutoMotionControl.ServoMotion">
+      <LineId Id="202" Count="12" />
+      <LineId Id="225" Count="6" />
+      <LineId Id="215" Count="2" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_AutoMotionControl.StateMachine">
+      <LineId Id="141" Count="0" />
+      <LineId Id="143" Count="2" />
+      <LineId Id="142" Count="0" />
+      <LineId Id="9" Count="2" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="117" Count="1" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="146" Count="1" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="18" Count="2" />
+      <LineId Id="130" Count="3" />
+      <LineId Id="129" Count="0" />
+      <LineId Id="119" Count="0" />
+      <LineId Id="25" Count="2" />
+      <LineId Id="135" Count="4" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="32" Count="9" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="78" Count="6" />
+      <LineId Id="87" Count="7" />
+      <LineId Id="97" Count="4" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="43" Count="11" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="61" Count="3" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

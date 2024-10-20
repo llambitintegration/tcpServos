@@ -1,0 +1,445 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_TCPServer" Id="{eaed78c2-34d1-42b7-98f4-b58fa196fe7c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_TCPServer
+VAR_INPUT
+    sLocalHost: T_IPv4Addr;
+    nLocalPort: UDINT;
+    bStartCommunication : BOOL;
+END_VAR
+VAR_OUTPUT
+    bConnected: BOOL;
+    cmdData : dutCommand;  // Command data structure including eCommand and arrParam
+    bBusy: BOOL;
+    bError: BOOL;
+    nErrorID: UDINT;
+    sSendData: STRING(255);  // Define this output if it represents data being sent
+END_VAR
+VAR
+    bAccepted: BOOL;
+	bReturn: BOOL;  // Define bReturn for _SendServerResponse calls
+    bHasParam: BOOL;
+    iState: INT;
+	ii	  : INT;
+    hListener: T_HSOCKET;
+    hSocket: T_HSOCKET;
+    fbSocketAccept: FB_SocketAccept;
+    fbSocketListen: FB_SocketListen;
+    fbSocketReceive: FB_SocketReceive;
+    fbSocketClose: FB_SocketClose;
+	fbSocketCloseAll: FB_SocketCloseAll;
+    fbSocketSend: FB_SocketSend;
+    sReadData: STRING(255);
+    nLength: INT;
+    sCommand: STRING(255);
+    sParam: STRING(255);
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[ServerConnection();
+IF bConnected THEN
+	ServerApplication();
+END_IF]]></ST>
+    </Implementation>
+    <Method Name="_ParseCommand" Id="{0c06b940-7af0-4804-90ae-9650b87d08a7}">
+      <Declaration><![CDATA[METHOD _ParseCommand : E_CommandList
+VAR
+    nParamStart : INT;
+    nSpacePos : INT;
+    nTempParam : LINT;
+    sBuff : STRING(255);  // Buffer for the main parsing steps
+    sTail : STRING := '$0D$0A';  // Tail for CR LF removal
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Initialize outputs
+FOR ii := 1 TO 5 DO
+	cmdData.arrParam[ii] := 0;  // Reset parameter array
+END_FOR
+bHasParam := FALSE;
+
+// Step 1: Prepare command buffer (sBuff) by removing trailing CR LF
+nLength := LEN(sReadData);
+IF nLength > 2 THEN
+    sBuff := LEFT(sReadData, nLength - 2);  // Remove CR LF
+ELSE
+    sBuff := sReadData;  // Use original if no CR LF found
+END_IF
+
+// Step 2: Find the first space in sBuff to separate the command from parameters
+nSpacePos := FIND(sBuff, ' ');
+IF nSpacePos > 0 THEN
+    // Split command and parameter parts
+    sCommand := LEFT(sBuff, nSpacePos - 1);
+    nParamStart := nSpacePos + 1;
+    sParam := MID(sBuff, LEN(sBuff) - nParamStart + 1, nParamStart);
+    
+	// Split sParam by commas
+    nLength := LEN(sParam);
+    IF nLength > 0 THEN
+        ii := 1;
+        WHILE (ii <= 5) AND (nLength > 0) DO
+            nSpacePos := FIND(sParam, ',');
+            IF nSpacePos > 0 THEN
+                sBuff := LEFT(sParam, nSpacePos - 1);
+                sParam := MID(sParam, nLength - nSpacePos, nSpacePos + 1);
+                nLength := LEN(sParam);
+            ELSE
+                sBuff := sParam;
+                nLength := 0;
+            END_IF
+            nTempParam := STRING_TO_LINT(sBuff);
+            IF nTempParam <> 0 THEN
+                cmdData.arrParam[ii] := nTempParam;  // Store parameter
+                bHasParam := TRUE;
+            END_IF
+            ii := ii + 1;
+        END_WHILE
+    END_IF
+ELSE
+    // If no space is found, assume the whole sBuff is the command
+    sCommand := sBuff;
+    sParam := '';
+END_IF
+
+// Step 3: Command matching and parameter handling
+IF sCommand = 'LIST' THEN
+    _ParseCommand := E_CommandList.LIST;
+
+ELSIF sCommand = 'HOM' THEN
+    _ParseCommand := E_CommandList.HOM;
+
+ELSIF sCommand = 'SCAN' THEN
+    _ParseCommand := E_CommandList.SCAN;
+	IF sParam <> '' THEN
+		bHasParam := TRUE;
+	END_IF
+
+ELSIF sCommand = 'MTP' THEN
+    _ParseCommand := E_CommandList.MTP;
+
+ELSIF sCommand = 'MOVR' THEN
+    _ParseCommand := E_CommandList.MOVR;
+    IF sParam <> '' THEN
+        nTempParam := STRING_TO_LINT(sParam);
+        IF nTempParam <> 0 THEN
+            cmdData.arrParam[1] := nTempParam;  // Store MOVR parameter
+            bHasParam := TRUE;
+        END_IF
+    END_IF
+
+ELSIF sCommand = 'MOVA' THEN
+    _ParseCommand := E_CommandList.MOVA;
+    IF sParam <> '' THEN
+        nTempParam := STRING_TO_LINT(sParam);
+        IF nTempParam <> 0 THEN
+            cmdData.arrParam[1] := nTempParam;  // Store MOVA parameter
+            bHasParam := TRUE;
+        END_IF
+    END_IF
+
+ELSIF sCommand = 'STAT' THEN
+    _ParseCommand := E_CommandList.STAT;
+
+ELSIF sCommand = 'CALIB' THEN
+    _ParseCommand := E_CommandList.CALIB;
+
+ELSIF sCommand = 'PARAM' THEN
+    _ParseCommand := E_CommandList.PARAM;
+
+ELSE
+    _ParseCommand := E_CommandList.ERR;  // Unknown command
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_SendServerResponse" Id="{247201f8-46f5-4c98-9a84-112ace1db69b}">
+      <Declaration><![CDATA[METHOD _SendServerResponse : BOOL
+VAR_INPUT
+	sResponseText : STRING(255);
+END_VAR
+VAR
+    sCRLF : STRING := '$0D$0A';
+    sFinalResponse : STRING(255);
+    nResponseSize : INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Build the full response
+sFinalResponse := CONCAT(sResponseText, sCRLF);
+
+// Copy response to send buffer
+nResponseSize := LEN(sFinalResponse);
+memcpy(ADR(sSendData), ADR(sFinalResponse), nResponseSize);
+
+// Null-terminate
+sSendData[nResponseSize] := 0;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MotionConnection" Id="{5d6cfbe8-ca83-44c3-84e4-36464e08dcd0}">
+      <Declaration><![CDATA[METHOD MotionConnection : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ServerApplication" Id="{7fb8d22d-8503-42c5-bda3-6d854609021c}">
+      <Declaration><![CDATA[METHOD ServerApplication : BOOL
+VAR
+    eCommandTemp: E_CommandList;
+	sResponseBuff : STRING(255);
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE iState OF
+    30: // Receive Data
+        fbSocketReceive(
+            sSrvNetId := '',
+            hSocket := hSocket,
+            cbLen := SIZEOF(sReadData),
+            pDest := ADR(sReadData),
+            bExecute := TRUE,
+            tTimeout := T#4S,
+            bBusy => ,
+            bError => bError,
+            nErrId => nErrorID
+        );
+
+        IF NOT fbSocketReceive.bBusy THEN
+            fbSocketReceive(bExecute := FALSE);
+            IF fbSocketReceive.nRecBytes <> 0 THEN
+                fbSocketSend(bExecute := FALSE);
+                iState := 300;
+            END_IF
+        END_IF
+
+        // Close connection when error occurs or trigger is set
+        IF fbSocketReceive.bError OR (NOT bStartCommunication) THEN
+            iState := iState + 10;
+        END_IF
+
+    300: // Parse Data
+        eCommandTemp := _ParseCommand();
+        cmdData.eCommand := eCommandTemp;  // Set parsed command to cmdData
+
+        CASE cmdData.eCommand OF
+            E_CommandList.LIST:
+                bReturn := _SendServerResponse('LIST, HOM, SCAN, MTP, MOVR, MOVA, STAT, CALIB, PARAM');
+            
+            E_CommandList.HOM:
+                bReturn := _SendServerResponse('HOM');
+
+            E_CommandList.SCAN:
+				sResponseBuff := 'SCAN ';
+				IF bHasParam THEN
+					FOR ii := 1 TO 5 DO
+						cmdData.arrParam[ii] := cmdData.arrParam[ii];
+						IF cmdData.arrParam[ii] <> 0 THEN
+							sResponseBuff := CONCAT(sResponseBuff,LINT_TO_STRING(cmdData.arrParam[ii]));
+							sResponseBuff := CONCAT(sResponseBuff, ' ');
+						END_IF
+					END_FOR
+				END_IF
+                bReturn := _SendServerResponse(sResponseBuff);
+
+            E_CommandList.MTP:
+                bReturn := _SendServerResponse('MTP');
+
+            E_CommandList.MOVR:
+                IF bHasParam THEN
+                    cmdData.arrParam[1] := cmdData.arrParam[1];  // Use arrParam[1] for MOVA
+                END_IF
+				bReturn := _SendServerResponse('MOVR');
+
+            E_CommandList.MOVA:
+                IF bHasParam THEN
+                    cmdData.arrParam[1] := cmdData.arrParam[1];  // Use arrParam[1] for MOVA
+                END_IF
+                bReturn := _SendServerResponse('MOVA');
+
+            E_CommandList.STAT:
+                bReturn := _SendServerResponse('STAT');
+
+            E_CommandList.CALIB:
+                bReturn := _SendServerResponse('CALIB');
+
+            E_CommandList.PARAM:
+                bReturn := _SendServerResponse('PARAM');
+
+            E_CommandList.ERR:
+                bReturn := _SendServerResponse('ERR');
+        END_CASE
+        iState := 34;
+
+    34: // Clear ReceiveBuffer after processing
+        memset(ADR(sReadData), 0, SIZEOF(sReadData));
+        iState := 35;
+
+    35: // Send Data
+        fbSocketSend(
+            sSrvNetId := '',
+            hSocket := hSocket,
+            cbLen := SIZEOF(sSendData),
+            pSrc := ADR(sSendData),
+            bExecute := TRUE,
+            tTimeout := T#3S,
+            bBusy => ,
+            bError => bError,
+            nErrId => nErrorID
+        );
+
+        IF NOT fbSocketSend.bBusy THEN
+            memset(ADR(sSendData), 0, SIZEOF(sSendData));
+            cmdData.eCommand := E_CommandList.NULL;
+            iState := iState - 5;
+        ELSIF fbSocketSend.bError THEN
+            iState := iState + 5;
+        END_IF
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ServerConnection" Id="{da9e66e0-c3d6-4fdc-94ac-1646d60f7ba0}">
+      <Declaration><![CDATA[METHOD ServerConnection : BOOL
+VAR
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE iState OF
+0: // Init State
+    IF bStartCommunication = TRUE THEN
+        fbSocketListen(bExecute := FALSE);
+        fbSocketAccept(bExecute := FALSE);
+        fbSocketCloseAll(bExecute := FALSE);
+        fbSocketClose(bExecute:= FALSE);
+		bConnected := FALSE;
+        bBusy := TRUE;
+        iState := iState + 10;
+    ELSE
+        bBusy := FALSE;
+    END_IF
+
+10: // Open Listener-Socket
+    fbSocketListen(
+        sSrvNetId:= '',                                                 // Local NetID
+        sLocalHost:= sLocalHost,                                         // Local IP
+        nLocalPort:= nLocalPort,                                         // Local Port
+        bExecute:= TRUE, 
+        tTimeout:= T#4S, 
+        bBusy=> , 
+        bError=> bError, 
+        nErrId=> nErrorID,
+        hListener=> hListener);                                          // Handle of Listener Socket
+
+    IF hListener.handle <> 0 THEN
+        iState := iState + 10;    
+    ELSIF bError THEN
+        iState := 40; // Error state
+    END_IF
+
+20: // Accept Client Connection
+    fbSocketAccept(
+        sSrvNetId:= '',         
+        hListener:= hListener,                                           // Handle of Listener Socket
+        bExecute:= TRUE, 
+        tTimeout:= T#4S, 
+        bAccepted=> bAccepted, 
+        bBusy=> , 
+        bError=> bError, 
+        nErrId=> nErrorID,
+        hSocket=> hSocket);                                              // Connection Handle
+
+    IF NOT fbSocketAccept.bBusy THEN
+        fbSocketAccept(bExecute := FALSE);
+    END_IF
+				   
+    IF bError THEN
+        iState := 40;  // Error state
+	ELSIF hSocket.handle <> 0 THEN
+        bConnected := TRUE;
+		iState := iState + 10;											// Step into ServerApplication
+	END_IF
+
+40: // Error Handling    
+    fbSocketClose(                                                        // Close Listener-Socket
+        sSrvNetId:= '', 
+        hSocket:= hListener, 
+        bExecute:= TRUE, 
+        tTimeout:= T#4S, 
+        bBusy=> , 
+        bError=> bError, 
+        nErrId=> nErrorID);        
+
+    IF (NOT fbSocketClose.bBusy) OR fbSocketClose.bError THEN
+        hListener.handle := 0;
+        iState := iState + 1;
+    END_IF
+
+41:    
+    fbSocketClose(bExecute := FALSE);
+    iState := iState + 1;
+
+42: // Close Connection Socket
+    fbSocketClose(
+        sSrvNetId:= '', 
+        hSocket:= hSocket, 
+        bExecute:= TRUE, 
+        tTimeout:= T#4S, 
+        bBusy=> , 
+        bError=> bError, 
+        nErrId=> nErrorID);
+
+    IF NOT (fbSocketClose.bBusy) OR fbSocketClose.bError THEN
+        hSocket.handle := 0;    
+        iState := 0;
+        bConnected := FALSE;
+    END_IF
+END_CASE
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_TCPServer">
+      <LineId Id="3" Count="2" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCPServer._ParseCommand">
+      <LineId Id="190" Count="0" />
+      <LineId Id="267" Count="2" />
+      <LineId Id="192" Count="17" />
+      <LineId Id="279" Count="0" />
+      <LineId Id="210" Count="35" />
+      <LineId Id="280" Count="2" />
+      <LineId Id="246" Count="12" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="75" Count="20" />
+      <LineId Id="270" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCPServer._SendServerResponse">
+      <LineId Id="3" Count="8" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCPServer.MotionConnection">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCPServer.ServerApplication">
+      <LineId Id="110" Count="38" />
+      <LineId Id="213" Count="0" />
+      <LineId Id="207" Count="1" />
+      <LineId Id="210" Count="0" />
+      <LineId Id="214" Count="1" />
+      <LineId Id="217" Count="0" />
+      <LineId Id="216" Count="0" />
+      <LineId Id="211" Count="0" />
+      <LineId Id="209" Count="0" />
+      <LineId Id="149" Count="5" />
+      <LineId Id="202" Count="1" />
+      <LineId Id="155" Count="0" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="156" Count="44" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TCPServer.ServerConnection">
+      <LineId Id="3" Count="46" />
+      <LineId Id="56" Count="42" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

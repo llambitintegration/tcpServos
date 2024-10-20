@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="System" Id="{4bcb5386-353b-4a56-9a7b-592b4f1aab8a}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM System
+VAR_IN_OUT
+	iTaskIdx		: DINT;
+	bFirstCycle		: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[bFirstCycle := TwinCAT_SystemInfoVarList._TaskInfo[iTaskIdx].FirstCycle;]]></ST>
+    </Implementation>
+    <LineIds Name="System">
+      <LineId Id="10" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

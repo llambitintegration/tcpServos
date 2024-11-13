@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="gvlServo" Id="{cc4dc48c-eb34-470f-99d5-70c06511e300}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	arrServoInterface		: ARRAY [1..4] OF stServoInterface;
+	
+	rTorqueLimit AT %Q*		: INT;
+	rTorqueAct	 AT %I*		: INT;
+	
+	coeRead 	: FB_CoERead;
+	coeWrite	: FB_CoEWrite;
+	bExecute 	: BOOL;
+	catchWord: INT;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

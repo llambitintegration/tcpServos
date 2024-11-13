@@ -4,10 +4,11 @@
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
 // Manual Control
-servo1			: FB_ManualMotionControl;
+servo1			: FB_ManualMotionControlNew;
 bank1			: FB_AutoMotionControl;
 manualMode 		: BOOL := TRUE;
 autoMode		: BOOL;
+
 // Server Control
 cmdData 		: dutCommand;
 bEnableDrive	: BOOL := FALSE;

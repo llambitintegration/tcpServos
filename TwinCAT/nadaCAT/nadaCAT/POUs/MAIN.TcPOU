@@ -8,35 +8,26 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[// System Control
-PLCSystem.iTaskIdx  := GETCURTASKINDEXEX();
-System(iTaskIdx 	:= PLCSystem.iTaskIdx,
-	   bFirstCycle  := PLCSystem.bFirstCycle);
+gvlSystem.iTaskIdx  := GETCURTASKINDEXEX();
+prgSystem(iTaskIdx 	:= gvlSystem.iTaskIdx,
+	   bFirstCycle  := gvlSystem.bFirstCycle);
 
-ServoGVLs.coeRead(Axis:= servoGVLs.servo1Interface.ioAxisRef,
-				  Index := 16#2191,
-				  SubIndex := 16#01,
-				  Execute := servoGVLs.toggle,
-				  Busy =>,
-				  pDstBuf := ADR(servoGVLs.catchWord),
-				  BufLen := SIZEOF(servoGVLs.catchWord));
-
+// IO (comment for simulation)
+//prgIO();
+	   
 // TCP Connection
+prgTCPComm(cmdData => gvlMotion.cmdData);
 
-TCPComm(cmdData => gvlMotion.cmdData);
-// Mode Control
-gvlMotion.autoMode := NOT gvlMotion.manualMode;
-IF gvlMotion.manualMode THEN
-	gvlMotion.servo1(stServoInterface := servoGVLs.servo1Interface);
-END_IF
-// Servo 1 Auto Control via Server
-gvlMotion.bank1(
-	   cmdData := gvlMotion.cmdData,
-	   bEnableDrive := gvlMotion.bEnableDrive,
-	   bStartDrive := gvlMotion.bStartDrive,
-	   bInterlockOK := gvlMotion.bInterlockOK,
-	   bTriggerDefault := gvlMotion.bTriggerDefault,
-	   driveStatus => gvlMotion.driveStatus,
-	   mcBankAxis := ServoGVLs.servo1Interface);
+// Motion Control
+prgMotion(
+	cmdData:= gvlMotion.cmdData, 
+	bAutoEnableDrive:= gvlMotion.bEnableDrive, 
+	bAutoStartDrive:= gvlMotion.bStartDrive, 
+	bAutoInterlockOK:= gvlMotion.bInterlockOK, 
+	bAutoTriggerDefault:= gvlMotion.bTriggerDefault, 
+	autoDriveStatus=> gvlMotion.driveStatus, 
+	cmdResponse=>, 
+	arrServoInterface:= gvlServo.arrServoInterface);
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
@@ -44,20 +35,16 @@ gvlMotion.bank1(
       <LineId Id="61" Count="0" />
       <LineId Id="56" Count="0" />
       <LineId Id="58" Count="0" />
-      <LineId Id="114" Count="0" />
-      <LineId Id="86" Count="0" />
-      <LineId Id="116" Count="3" />
-      <LineId Id="121" Count="1" />
+      <LineId Id="150" Count="0" />
       <LineId Id="55" Count="0" />
-      <LineId Id="7" Count="3" />
-      <LineId Id="100" Count="0" />
-      <LineId Id="110" Count="2" />
-      <LineId Id="35" Count="0" />
-      <LineId Id="93" Count="0" />
-      <LineId Id="105" Count="0" />
-      <LineId Id="76" Count="1" />
-      <LineId Id="79" Count="2" />
-      <LineId Id="78" Count="0" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="135" Count="0" />
+      <LineId Id="142" Count="7" />
+      <LineId Id="141" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
   </POU>

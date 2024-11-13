@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
-  <POU Name="fb_StateMachine" Id="{90634356-0d72-4b86-a14c-3dcf81e6168f}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK fb_StateMachine
+  <POU Name="FB_ManualStateMachine" Id="{90634356-0d72-4b86-a14c-3dcf81e6168f}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_ManualStateMachine
 VAR_INPUT
 	startCycle 			: BOOL;
 	continueToTop		: BOOL;

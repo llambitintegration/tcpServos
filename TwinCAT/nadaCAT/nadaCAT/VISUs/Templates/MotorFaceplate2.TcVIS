@@ -4379,7 +4379,7 @@
                         </o>
                         <o>
                           <v n="Id">397264524L</v>
-                          <v n="Value">"ServoGVLs.servo1Interface.iMotionSelect"</v>
+                          <v n="Value">"gvlServo.servo1Interface.iMotionSelect"</v>
                         </o>
                         <o>
                           <v n="Id">594477479L</v>

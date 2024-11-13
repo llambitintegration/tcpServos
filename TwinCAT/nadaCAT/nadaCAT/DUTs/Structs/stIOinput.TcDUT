@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="stIOinput" Id="{2c37f88b-aa9f-40a1-a51a-917abe7d50f1}">
+    <Declaration><![CDATA[TYPE stIOinput :
+STRUCT
+// ~~~~~ Input Signals ~~~~~
+	// Drive CoE
+	coeProbe1Signal			: WORD;
+	coeProbe1PosLatch		: WORD;
+	coeProbe1NegLatch		: WORD;
+	
+	// Hardware Signals
+	Rack1Slot2				: EL1008;
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

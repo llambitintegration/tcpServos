@@ -27,7 +27,16 @@
     <Compile Include="DUTs\Enums\E_TCPState.TcTLEO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\Hardware\EL1008.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Hardware\EL2008.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\Structs\dutCommand.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Structs\dutResponse.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\Structs\mcInterface.TcDUT">
@@ -37,6 +46,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\Structs\stConfigParams.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Structs\stIOinput.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Structs\stIOoutput.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\Structs\stServoInterface.TcDUT">
@@ -52,15 +67,15 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="GVLs\IO.TcGVL">
+    <Compile Include="GVLs\gvlIO.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="GVLs\PLCSystem.TcGVL">
+    <Compile Include="GVLs\gvlSystem.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="GVLs\ServoGVLs.TcGVL">
+    <Compile Include="GVLs\gvlServo.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
@@ -73,7 +88,10 @@
     <Compile Include="POUs\FBs\FB_ManualMotionControl.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FBs\fb_StateMachine.TcPOU">
+    <Compile Include="POUs\FBs\FB_ManualMotionControlNew.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FBs\FB_ManualStateMachine.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FBs\FB_TCPServer.TcPOU">
@@ -85,13 +103,16 @@
     <Compile Include="POUs\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\PRGs\Motion.TcPOU">
+    <Compile Include="POUs\PRGs\prgMotion.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\PRGs\System.TcPOU">
+    <Compile Include="POUs\PRGs\prgIO.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\PRGs\TCPComm.TcPOU">
+    <Compile Include="POUs\PRGs\prgSystem.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\PRGs\prgTCPComm.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Visualization Manager.TcVMO">
@@ -120,6 +141,7 @@
   <ItemGroup>
     <Folder Include="DUTs" />
     <Folder Include="DUTs\Enums" />
+    <Folder Include="DUTs\Hardware" />
     <Folder Include="DUTs\Structs" />
     <Folder Include="GVLs" />
     <Folder Include="External Source" />

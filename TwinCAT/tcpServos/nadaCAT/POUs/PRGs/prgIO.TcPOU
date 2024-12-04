@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="prgIO" Id="{8caf3471-a93f-413d-a856-c301020de24e}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM prgIO
+VAR;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// ~~~~~ CoE I/O ~~~~~
+(*
+PLC Inputs
+
+0x2191:01 (bit 0) Probe 1 signal
+0x2199:01 Probe 1 positive latched
+0x219A:01 Probe 1 negative latched
+
+PLC Outputs
+
+0x20AA:01 Probing cycle command
+0x2195:01 Probe 1 enable
+*)
+
+// Scan Toggle
+gvlServo.bExecute := NOT gvlServo.bExecute;
+
+// ~ Inputs ~
+// Probe 1 Signal : 2191:01
+gvlServo.coeRead(Axis:= gvlServo.servo1Interface.ioAxisRef,
+				  Index := 16#2191,
+				  SubIndex := 16#01,
+				  Execute := gvlServo.bExecute,
+				  Busy =>,
+				  pDstBuf := ADR(gvlIO.stInputs.coeProbe1Signal),
+				  BufLen := SIZEOF(gvlIO.stInputs.coeProbe1Signal));
+
+// Probe 1 Positive Latched: 2199:01
+gvlServo.coeRead(Axis:= gvlServo.servo1Interface.ioAxisRef,
+				  Index := 16#2199,
+				  SubIndex := 16#01,
+				  Execute := gvlServo.bExecute,
+				  Busy =>,
+				  pDstBuf := ADR(gvlIO.stInputs.coeProbe1PosLatch),
+				  BufLen := SIZEOF(gvlIO.stInputs.coeProbe1PosLatch));
+
+// Probe 1 Negative Latched: 219A:01
+gvlServo.coeRead(Axis:= gvlServo.servo1Interface.ioAxisRef,
+				  Index := 16#219A,
+				  SubIndex := 16#01,
+				  Execute := gvlServo.bExecute,
+				  Busy =>,
+				  pDstBuf := ADR(gvlIO.stInputs.coeProbe1NegLatch),
+				  BufLen := SIZEOF(gvlIO.stInputs.coeProbe1NegLatch));
+
+// ~ Outputs ~
+// Probing Cycle Command : 20AA:01
+	gvlServo.coeWrite(
+		Axis:= gvlServo.servo1Interface.ioAxisRef, 
+		Index:= 16#20AA, 
+		SubIndex:= 16#01, 
+		pSrcBuf:= ADR(gvlIO.stOutputs.coeProbingCycleCommand), 
+		BufLen:= SIZEOF(gvlIO.stOutputs.coeProbingCycleCommand), 
+		Execute:= gvlServo.bExecute);
+// Probe 1 Enable : 2195:01
+	gvlServo.coeWrite(
+		Axis:= gvlServo.servo1Interface.ioAxisRef, 
+		Index:= 16#2195, 
+		SubIndex:= 16#01, 
+		pSrcBuf:= ADR(gvlIO.stOutputs.coeProbe1Enable), 
+		BufLen:= SIZEOF(gvlIO.stOutputs.coeProbingCycleCommand), 
+		Execute:= gvlServo.bExecute);
+
+ ]]></ST>
+    </Implementation>
+    <LineIds Name="prgIO">
+      <LineId Id="16" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="20" Count="8" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="9" Count="5" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="45" Count="5" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="52" Count="5" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="58" Count="1" />
+      <LineId Id="61" Count="4" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="72" Count="5" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="34" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

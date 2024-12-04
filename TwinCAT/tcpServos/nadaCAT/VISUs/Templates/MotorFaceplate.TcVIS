@@ -260,7 +260,7 @@
                         </o>
                         <o>
                           <v n="Id">743958181L</v>
-                          <v n="Value">"ServoGVLs.servo1Interface.bDriveEnable"</v>
+                          <v n="Value">"gvlServo.servo1Interface.bDriveEnable"</v>
                         </o>
                       </l>
                     </o>
@@ -362,7 +362,7 @@
                         </o>
                         <o>
                           <v n="Id">743958181L</v>
-                          <v n="Value">"ServoGVLs.servo1Interface.bStopMotion"</v>
+                          <v n="Value">"gvlServo.servo1Interface.bStopMotion"</v>
                         </o>
                       </l>
                     </o>
@@ -464,7 +464,7 @@
                         </o>
                         <o>
                           <v n="Id">743958181L</v>
-                          <v n="Value">"ServoGVLs.servo1Interface.bFaultReset"</v>
+                          <v n="Value">"gvlServo.servo1Interface.bFaultReset"</v>
                         </o>
                       </l>
                     </o>
@@ -558,7 +558,7 @@
                         </o>
                         <o>
                           <v n="Id">743958181L</v>
-                          <v n="Value">"ServoGVLs.servo1Interface.bDriveEnabled"</v>
+                          <v n="Value">"gvlServo.servo1Interface.bDriveEnabled"</v>
                         </o>
                       </l>
                     </o>
@@ -652,7 +652,7 @@
                         </o>
                         <o>
                           <v n="Id">743958181L</v>
-                          <v n="Value">"ServoGVLs.servo1Interface.bNotMoving"</v>
+                          <v n="Value">"gvlServo.servo1Interface.bNotMoving"</v>
                         </o>
                       </l>
                     </o>
@@ -746,7 +746,7 @@
                         </o>
                         <o>
                           <v n="Id">743958181L</v>
-                          <v n="Value">"ServoGVLs.servo1Interface.bFaulted"</v>
+                          <v n="Value">"gvlServo.servo1Interface.bFaulted"</v>
                         </o>
                       </l>
                     </o>
@@ -1164,7 +1164,7 @@
                             </o>
                             <o>
                               <v n="Id">1186196937L</v>
-                              <v n="Value">"ServoGVLs.servo1Interface.bJogFWD"</v>
+                              <v n="Value">"gvlServo.servo1Interface.bJogFWD"</v>
                             </o>
                           </l>
                         </o>
@@ -1346,7 +1346,7 @@
                           <l n="VisualElemMemberList" t="VisualElemMemberCollection" cet="VisualElemMember">
                             <o>
                               <v n="Id">1186196937L</v>
-                              <v n="Value">"ServoGVLs.servo1Interface.bJogRev"</v>
+                              <v n="Value">"gvlServo.servo1Interface.bJogRev"</v>
                             </o>
                           </l>
                         </o>
@@ -1774,7 +1774,7 @@
                         </o>
                         <o>
                           <v n="Id">1999528970L</v>
-                          <v n="Value">"ServoGVLs.servo1Interface.bMoving"</v>
+                          <v n="Value">"gvlServo.servo1Interface.bMoving"</v>
                         </o>
                         <o>
                           <v n="Id">3719097617L</v>
@@ -1933,7 +1933,7 @@
                         </o>
                         <o>
                           <v n="Id">1999528970L</v>
-                          <v n="Value">"ServoGVLs.servo1Interface.bNotMoving"</v>
+                          <v n="Value">"gvlServo.servo1Interface.bNotMoving"</v>
                         </o>
                         <o>
                           <v n="Id">3719097617L</v>
@@ -2092,7 +2092,7 @@
                         </o>
                         <o>
                           <v n="Id">1999528970L</v>
-                          <v n="Value">"ServoGVLs.servo1Interface.bAccelerating"</v>
+                          <v n="Value">"gvlServo.servo1Interface.bAccelerating"</v>
                         </o>
                         <o>
                           <v n="Id">3719097617L</v>
@@ -2251,7 +2251,7 @@
                         </o>
                         <o>
                           <v n="Id">1999528970L</v>
-                          <v n="Value">"ServoGVLs.servo1Interface.bDecelerating"</v>
+                          <v n="Value">"gvlServo.servo1Interface.bDecelerating"</v>
                         </o>
                         <o>
                           <v n="Id">3719097617L</v>
@@ -2407,7 +2407,7 @@
                         </o>
                         <o>
                           <v n="Id">1999528970L</v>
-                          <v n="Value">"ServoGVLs.servo1Interface.bInposition"</v>
+                          <v n="Value">"gvlServo.servo1Interface.bInposition"</v>
                         </o>
                         <o>
                           <v n="Id">3719097617L</v>
@@ -2563,7 +2563,7 @@
                         </o>
                         <o>
                           <v n="Id">1999528970L</v>
-                          <v n="Value">"ServoGVLs.servo1Interface.bInVelocity"</v>
+                          <v n="Value">"gvlServo.servo1Interface.bInVelocity"</v>
                         </o>
                         <o>
                           <v n="Id">3719097617L</v>
@@ -2967,7 +2967,7 @@
                         </o>
                         <o>
                           <v n="Id">2477733581L</v>
-                          <v n="Value">"ServoGVLs.servo1Interface.rActualSpeed"</v>
+                          <v n="Value">"gvlServo.servo1Interface.rActualSpeed"</v>
                         </o>
                         <o>
                           <v n="Id">823443203L</v>
@@ -3257,7 +3257,7 @@
                         </o>
                         <o>
                           <v n="Id">2477733581L</v>
-                          <v n="Value">"ServoGVLs.servo1Interface.rActualPosition"</v>
+                          <v n="Value">"gvlServo.servo1Interface.rActualPosition"</v>
                         </o>
                         <o>
                           <v n="Id">823443203L</v>
@@ -3416,7 +3416,7 @@
                           <l n="VisualElemMemberList" t="VisualElemMemberCollection" cet="VisualElemMember">
                             <o>
                               <v n="Id">1186196937L</v>
-                              <v n="Value">"ServoGVLs.servo1Interface.bHome"</v>
+                              <v n="Value">"gvlServo.servo1Interface.bHome"</v>
                             </o>
                           </l>
                         </o>
@@ -5647,7 +5647,7 @@
                         </o>
                         <o>
                           <v n="Id">397264524L</v>
-                          <v n="Value">"ServoGVLs.servo1Interface.iMotionSelect"</v>
+                          <v n="Value">"gvlServo.servo1Interface.iMotionSelect"</v>
                         </o>
                         <o>
                           <v n="Id">594477479L</v>
@@ -5689,7 +5689,7 @@
                           <l n="VisualElemMemberList" t="VisualElemMemberCollection" cet="VisualElemMember">
                             <o>
                               <v n="Id">1186196937L</v>
-                              <v n="Value">"ServoGVLs.servo1Interface.bDemoModeStart"</v>
+                              <v n="Value">"gvlServo.servo1Interface.bDemoModeStart"</v>
                             </o>
                           </l>
                         </o>
@@ -5841,7 +5841,7 @@
                         </o>
                         <o>
                           <v n="Id">2880254039L</v>
-                          <v n="Value">"ServoGVLs.servo1Interface.iMotionSelect = 0"</v>
+                          <v n="Value">"gvlServo.servo1Interface.iMotionSelect = 0"</v>
                         </o>
                         <o>
                           <v n="Id">2597686782L</v>
@@ -5875,7 +5875,7 @@
                           <l n="VisualElemMemberList" t="VisualElemMemberCollection" cet="VisualElemMember">
                             <o>
                               <v n="Id">1186196937L</v>
-                              <v n="Value">"ServoGVLs.servo1Interface.bDemoModeStop"</v>
+                              <v n="Value">"gvlServo.servo1Interface.bDemoModeStop"</v>
                             </o>
                           </l>
                         </o>
@@ -6027,7 +6027,7 @@
                         </o>
                         <o>
                           <v n="Id">2880254039L</v>
-                          <v n="Value">"ServoGVLs.servo1Interface.iMotionSelect = 0"</v>
+                          <v n="Value">"gvlServo.servo1Interface.iMotionSelect = 0"</v>
                         </o>
                         <o>
                           <v n="Id">2597686782L</v>
@@ -6505,7 +6505,7 @@
                         </o>
                         <o>
                           <v n="Id">2477733581L</v>
-                          <v n="Value">"ServoGVLs.servo1Interface.rSpeed"</v>
+                          <v n="Value">"gvlServo.servo1Interface.rSpeed"</v>
                         </o>
                         <o>
                           <v n="Id">2880254039L</v>
@@ -6803,7 +6803,7 @@
                         </o>
                         <o>
                           <v n="Id">2477733581L</v>
-                          <v n="Value">"ServoGVLs.servo1Interface.rAccelDecel"</v>
+                          <v n="Value">"gvlServo.servo1Interface.rAccelDecel"</v>
                         </o>
                         <o>
                           <v n="Id">2880254039L</v>
@@ -7101,7 +7101,7 @@
                         </o>
                         <o>
                           <v n="Id">2477733581L</v>
-                          <v n="Value">"ServoGVLs.servo1Interface.rPosition"</v>
+                          <v n="Value">"gvlServo.servo1Interface.rPosition"</v>
                         </o>
                         <o>
                           <v n="Id">2880254039L</v>
@@ -7135,7 +7135,7 @@
                           <l n="VisualElemMemberList" t="VisualElemMemberCollection" cet="VisualElemMember">
                             <o>
                               <v n="Id">1186196937L</v>
-                              <v n="Value">"ServoGVLs.servo1Interface.bTriggerMove"</v>
+                              <v n="Value">"gvlServo.servo1Interface.bTriggerMove"</v>
                             </o>
                           </l>
                         </o>

@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="prgSystem" Id="{4bcb5386-353b-4a56-9a7b-592b4f1aab8a}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM prgSystem
+VAR_IN_OUT
+	iTaskIdx		: DINT;
+	bFirstCycle		: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Scan Control
+bFirstCycle := TwinCAT_SystemInfoVarList._TaskInfo[iTaskIdx].FirstCycle;
+
+// Mode Control
+gvlMotion.autoMode := NOT gvlMotion.manualMode;]]></ST>
+    </Implementation>
+    <LineIds Name="prgSystem">
+      <LineId Id="17" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="20" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

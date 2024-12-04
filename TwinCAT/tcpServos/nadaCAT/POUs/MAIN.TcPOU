@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="MAIN" Id="{9767283b-cca1-4624-be02-ae2381d3ffbe}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// System Control
+gvlSystem.iTaskIdx  := GETCURTASKINDEXEX();
+prgSystem(iTaskIdx 	:= gvlSystem.iTaskIdx,
+	   bFirstCycle  := gvlSystem.bFirstCycle);
+
+// IO (comment for simulation)
+//prgIO();
+	   
+// TCP Connection
+prgTCPComm(cmdData => gvlMotion.cmdData);
+
+// Motion Control
+prgMotion(
+	cmdData:= gvlMotion.cmdData, 
+	bAutoEnableDrive:= gvlMotion.bEnableDrive, 
+	bAutoStartDrive:= gvlMotion.bStartDrive, 
+	bAutoInterlockOK:= gvlMotion.bInterlockOK, 
+	bAutoTriggerDefault:= gvlMotion.bTriggerDefault, 
+	autoDriveStatus=> gvlMotion.driveStatus, 
+	cmdResponse=>, 
+	arrServoInterface:= gvlServo.arrServoInterface);
+]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="5" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="150" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="135" Count="0" />
+      <LineId Id="142" Count="7" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

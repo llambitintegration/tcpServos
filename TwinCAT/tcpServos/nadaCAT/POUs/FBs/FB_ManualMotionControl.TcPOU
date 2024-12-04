@@ -65,7 +65,7 @@ VAR
 	moveBottomTrig			: BOOL;
 	moveTopTrig				: BOOL;
 	
-	demoState			: fb_StateMachine;
+	demoState			: FB_ManualStateMachine;
 	demoModePermissive	: BOOL;
 	demoModeRun			: BOOL;
 	bottomComplete		: BOOL;
@@ -86,6 +86,240 @@ END_VAR
               <v n="NetworkListComment">""</v>
               <v n="DefaultViewMode">"Fbd"</v>
               <l2 n="NetworkList" cet="Network">
+                <o>
+                  <v n="ILActive">false</v>
+                  <v n="FBDValid">false</v>
+                  <v n="ILValid">false</v>
+                  <l2 n="ILLines" />
+                  <v n="Comment">""</v>
+                  <v n="Title">""</v>
+                  <v n="Label">""</v>
+                  <v n="OutCommented">false</v>
+                  <l2 n="NetworkItems" cet="BoxTreeBox">
+                    <o>
+                      <v n="BoxType">"StateMachine"</v>
+                      <o n="Instance" t="Operand">
+                        <v n="Operand">""</v>
+                        <n n="Type" />
+                        <v n="Comment">""</v>
+                        <v n="SymbolComment">""</v>
+                        <v n="Address">""</v>
+                        <o n="Flags" t="Flags">
+                          <v n="Flags">0</v>
+                          <v n="Fixed">false</v>
+                          <v n="Extensible">false</v>
+                        </o>
+                        <v n="LValue">false</v>
+                        <v n="Boolean">false</v>
+                        <v n="IsInstance">true</v>
+                        <v n="Id">868L</v>
+                      </o>
+                      <o n="OutputItems" t="OutputItemList">
+                        <l2 n="OutputItems">
+                          <n />
+                        </l2>
+                      </o>
+                      <o n="Flags" t="Flags">
+                        <v n="Flags">0</v>
+                        <v n="Fixed">true</v>
+                        <v n="Extensible">false</v>
+                      </o>
+                      <n n="InputFlags" />
+                      <l2 n="InputItems" />
+                      <o n="InputParam" t="ParamList">
+                        <l2 n="Names" />
+                        <l2 n="Types" />
+                      </o>
+                      <o n="OutputParam" t="ParamList">
+                        <l2 n="Names" cet="String">
+                          <v>StateMachine</v>
+                        </l2>
+                        <l2 n="Types" cet="String">
+                          <v>BOOL</v>
+                        </l2>
+                      </o>
+                      <v n="CallType" t="Operator">Method</v>
+                      <v n="EN">false</v>
+                      <v n="ENO">false</v>
+                      <n n="STSnippet" />
+                      <v n="ContainsExtensibleInputs">false</v>
+                      <v n="ProvidesSTSnippet">false</v>
+                      <v n="Id">869L</v>
+                    </o>
+                  </l2>
+                  <l2 n="Connectors" />
+                  <v n="Id">861L</v>
+                </o>
+                <o>
+                  <v n="ILActive">false</v>
+                  <v n="FBDValid">false</v>
+                  <v n="ILValid">false</v>
+                  <l2 n="ILLines" />
+                  <v n="Comment">""</v>
+                  <v n="Title">""</v>
+                  <v n="Label">""</v>
+                  <v n="OutCommented">false</v>
+                  <l2 n="NetworkItems" cet="BoxTreeBox">
+                    <o>
+                      <v n="BoxType">"ServoInit"</v>
+                      <o n="Instance" t="Operand">
+                        <v n="Operand">""</v>
+                        <n n="Type" />
+                        <v n="Comment">""</v>
+                        <v n="SymbolComment">""</v>
+                        <v n="Address">""</v>
+                        <o n="Flags" t="Flags">
+                          <v n="Flags">0</v>
+                          <v n="Fixed">false</v>
+                          <v n="Extensible">false</v>
+                        </o>
+                        <v n="LValue">false</v>
+                        <v n="Boolean">false</v>
+                        <v n="IsInstance">true</v>
+                        <v n="Id">879L</v>
+                      </o>
+                      <o n="OutputItems" t="OutputItemList">
+                        <l2 n="OutputItems">
+                          <n />
+                        </l2>
+                      </o>
+                      <o n="Flags" t="Flags">
+                        <v n="Flags">0</v>
+                        <v n="Fixed">true</v>
+                        <v n="Extensible">false</v>
+                      </o>
+                      <n n="InputFlags" />
+                      <l2 n="InputItems" />
+                      <o n="InputParam" t="ParamList">
+                        <l2 n="Names" />
+                        <l2 n="Types" />
+                      </o>
+                      <o n="OutputParam" t="ParamList">
+                        <l2 n="Names" cet="String">
+                          <v>ServoInit</v>
+                        </l2>
+                        <l2 n="Types" cet="String">
+                          <v>BOOL</v>
+                        </l2>
+                      </o>
+                      <v n="CallType" t="Operator">Method</v>
+                      <v n="EN">false</v>
+                      <v n="ENO">false</v>
+                      <n n="STSnippet" />
+                      <v n="ContainsExtensibleInputs">false</v>
+                      <v n="ProvidesSTSnippet">false</v>
+                      <v n="Id">880L</v>
+                    </o>
+                  </l2>
+                  <l2 n="Connectors" />
+                  <v n="Id">872L</v>
+                </o>
+                <o>
+                  <v n="ILActive">false</v>
+                  <v n="FBDValid">false</v>
+                  <v n="ILValid">false</v>
+                  <l2 n="ILLines" />
+                  <v n="Comment">""</v>
+                  <v n="Title">""</v>
+                  <v n="Label">""</v>
+                  <v n="OutCommented">false</v>
+                  <l2 n="NetworkItems" cet="BoxTreeBox">
+                    <o>
+                      <v n="BoxType">"ServoMotion"</v>
+                      <o n="Instance" t="Operand">
+                        <v n="Operand">""</v>
+                        <n n="Type" />
+                        <v n="Comment">""</v>
+                        <v n="SymbolComment">""</v>
+                        <v n="Address">""</v>
+                        <o n="Flags" t="Flags">
+                          <v n="Flags">0</v>
+                          <v n="Fixed">false</v>
+                          <v n="Extensible">false</v>
+                        </o>
+                        <v n="LValue">false</v>
+                        <v n="Boolean">false</v>
+                        <v n="IsInstance">true</v>
+                        <v n="Id">890L</v>
+                      </o>
+                      <o n="OutputItems" t="OutputItemList">
+                        <l2 n="OutputItems" cet="Operand">
+                          <n />
+                          <o>
+                            <v n="Operand">"???"</v>
+                            <v n="Type">"BOOL"</v>
+                            <v n="Comment">""</v>
+                            <v n="SymbolComment">""</v>
+                            <v n="Address">""</v>
+                            <o n="Flags" t="Flags">
+                              <v n="Flags">0</v>
+                              <v n="Fixed">false</v>
+                              <v n="Extensible">false</v>
+                            </o>
+                            <v n="LValue">true</v>
+                            <v n="Boolean">false</v>
+                            <v n="IsInstance">false</v>
+                            <v n="Id">883L</v>
+                          </o>
+                        </l2>
+                      </o>
+                      <o n="Flags" t="Flags">
+                        <v n="Flags">0</v>
+                        <v n="Fixed">true</v>
+                        <v n="Extensible">false</v>
+                      </o>
+                      <n n="InputFlags" />
+                      <l2 n="InputItems" cet="BoxTreeOperand">
+                        <o>
+                          <o n="Operand" t="Operand">
+                            <v n="Operand">"???"</v>
+                            <v n="Type">"BOOL"</v>
+                            <v n="Comment">""</v>
+                            <v n="SymbolComment">""</v>
+                            <v n="Address">""</v>
+                            <o n="Flags" t="Flags">
+                              <v n="Flags">0</v>
+                              <v n="Fixed">false</v>
+                              <v n="Extensible">false</v>
+                            </o>
+                            <v n="LValue">false</v>
+                            <v n="Boolean">false</v>
+                            <v n="IsInstance">false</v>
+                            <v n="Id">885L</v>
+                          </o>
+                          <v n="Id">884L</v>
+                        </o>
+                      </l2>
+                      <o n="InputParam" t="ParamList">
+                        <l2 n="Names" cet="String">
+                          <v>EN</v>
+                        </l2>
+                        <l2 n="Types" cet="String">
+                          <v>BOOL</v>
+                        </l2>
+                      </o>
+                      <o n="OutputParam" t="ParamList">
+                        <l2 n="Names" cet="String">
+                          <v>ENO</v>
+                          <v>ServoMotion</v>
+                        </l2>
+                        <l2 n="Types" cet="String">
+                          <v>BOOL</v>
+                          <v>BOOL</v>
+                        </l2>
+                      </o>
+                      <v n="CallType" t="Operator">Method</v>
+                      <v n="EN">true</v>
+                      <v n="ENO">true</v>
+                      <n n="STSnippet" />
+                      <v n="ContainsExtensibleInputs">false</v>
+                      <v n="ProvidesSTSnippet">false</v>
+                      <v n="Id">891L</v>
+                    </o>
+                  </l2>
+                  <l2 n="Connectors" />
+                  <v n="Id">871L</v>
+                </o>
                 <o>
                   <v n="ILActive">false</v>
                   <v n="FBDValid">false</v>
@@ -797,7 +1031,7 @@ END_VAR
                           </o>
                           <o>
                             <o n="Operand" t="Operand">
-                              <v n="Operand">"IO.bHomeSwitch"</v>
+                              <v n="Operand">"gvlIO.bHomeSwitch"</v>
                               <v n="Type">"BOOL"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
@@ -3718,172 +3952,172 @@ END_VAR
                           <o n="TextDocument" t="TextDocument">
                             <a n="TextLines" cet="TextLine">
                               <o>
-                                <v n="Id">779L</v>
+                                <v n="Id">1112L</v>
                                 <n n="Tag" />
                                 <v n="Text">"// Cycle Start"</v>
                               </o>
                               <o>
-                                <v n="Id">742L</v>
+                                <v n="Id">1113L</v>
                                 <n n="Tag" />
                                 <v n="Text">"IF demoModePermissive AND demoModeRun THEN"</v>
                               </o>
                               <o>
-                                <v n="Id">743L</v>
+                                <v n="Id">1114L</v>
                                 <n n="Tag" />
                                 <v n="Text">"	startCycle := TRUE;"</v>
                               </o>
                               <o>
-                                <v n="Id">744L</v>
+                                <v n="Id">1115L</v>
                                 <n n="Tag" />
                                 <v n="Text">"ELSE "</v>
                               </o>
                               <o>
-                                <v n="Id">745L</v>
+                                <v n="Id">1116L</v>
                                 <n n="Tag" />
                                 <v n="Text">"	startCycle := FALSE;"</v>
                               </o>
                               <o>
-                                <v n="Id">746L</v>
+                                <v n="Id">1117L</v>
                                 <n n="Tag" />
                                 <v n="Text">"END_IF"</v>
                               </o>
                               <o>
-                                <v n="Id">780L</v>
+                                <v n="Id">1118L</v>
                                 <n n="Tag" />
                                 <v n="Text">""</v>
                               </o>
                               <o>
-                                <v n="Id">747L</v>
+                                <v n="Id">1119L</v>
                                 <n n="Tag" />
                                 <v n="Text">"// Continue to Top"</v>
                               </o>
                               <o>
-                                <v n="Id">748L</v>
+                                <v n="Id">1120L</v>
                                 <n n="Tag" />
                                 <v n="Text">"IF bottomComplete AND demoModeRun THEN"</v>
                               </o>
                               <o>
-                                <v n="Id">759L</v>
+                                <v n="Id">1121L</v>
                                 <n n="Tag" />
                                 <v n="Text">"	continueToTop := TRUE;"</v>
                               </o>
                               <o>
-                                <v n="Id">760L</v>
+                                <v n="Id">1122L</v>
                                 <n n="Tag" />
                                 <v n="Text">"ELSE"</v>
                               </o>
                               <o>
-                                <v n="Id">761L</v>
+                                <v n="Id">1123L</v>
                                 <n n="Tag" />
                                 <v n="Text">"	continueToTop := FALSE;"</v>
                               </o>
                               <o>
-                                <v n="Id">762L</v>
+                                <v n="Id">1124L</v>
                                 <n n="Tag" />
                                 <v n="Text">"END_IF"</v>
                               </o>
                               <o>
-                                <v n="Id">781L</v>
+                                <v n="Id">1125L</v>
                                 <n n="Tag" />
                                 <v n="Text">""</v>
                               </o>
                               <o>
-                                <v n="Id">782L</v>
+                                <v n="Id">1126L</v>
                                 <n n="Tag" />
                                 <v n="Text">""</v>
                               </o>
                               <o>
-                                <v n="Id">764L</v>
+                                <v n="Id">1127L</v>
                                 <n n="Tag" />
                                 <v n="Text">"// Continue to Bottom"</v>
                               </o>
                               <o>
-                                <v n="Id">765L</v>
+                                <v n="Id">1128L</v>
                                 <n n="Tag" />
                                 <v n="Text">"IF topComplete AND demoModeRun THEN"</v>
                               </o>
                               <o>
-                                <v n="Id">766L</v>
+                                <v n="Id">1129L</v>
                                 <n n="Tag" />
                                 <v n="Text">"	continueToBottom := TRUE;"</v>
                               </o>
                               <o>
-                                <v n="Id">767L</v>
+                                <v n="Id">1130L</v>
                                 <n n="Tag" />
                                 <v n="Text">"ELSE"</v>
                               </o>
                               <o>
-                                <v n="Id">768L</v>
+                                <v n="Id">1131L</v>
                                 <n n="Tag" />
                                 <v n="Text">"	continueToBottom := FALSE;"</v>
                               </o>
                               <o>
-                                <v n="Id">763L</v>
+                                <v n="Id">1132L</v>
                                 <n n="Tag" />
                                 <v n="Text">"END_IF"</v>
                               </o>
                               <o>
-                                <v n="Id">783L</v>
+                                <v n="Id">1133L</v>
                                 <n n="Tag" />
                                 <v n="Text">""</v>
                               </o>
                               <o>
-                                <v n="Id">749L</v>
+                                <v n="Id">1134L</v>
                                 <n n="Tag" />
                                 <v n="Text">"// End at Bottom"</v>
                               </o>
                               <o>
-                                <v n="Id">769L</v>
+                                <v n="Id">1135L</v>
                                 <n n="Tag" />
                                 <v n="Text">"IF bottomComplete AND NOT demoModeRun THEN"</v>
                               </o>
                               <o>
-                                <v n="Id">770L</v>
+                                <v n="Id">1136L</v>
                                 <n n="Tag" />
                                 <v n="Text">"	endAtBottom := TRUE;"</v>
                               </o>
                               <o>
-                                <v n="Id">771L</v>
+                                <v n="Id">1137L</v>
                                 <n n="Tag" />
                                 <v n="Text">"ELSE"</v>
                               </o>
                               <o>
-                                <v n="Id">772L</v>
+                                <v n="Id">1138L</v>
                                 <n n="Tag" />
                                 <v n="Text">"	endAtBottom := FALSE;"</v>
                               </o>
                               <o>
-                                <v n="Id">773L</v>
+                                <v n="Id">1139L</v>
                                 <n n="Tag" />
                                 <v n="Text">"END_IF"</v>
                               </o>
                               <o>
-                                <v n="Id">784L</v>
+                                <v n="Id">1140L</v>
                                 <n n="Tag" />
                                 <v n="Text">""</v>
                               </o>
                               <o>
-                                <v n="Id">774L</v>
+                                <v n="Id">1141L</v>
                                 <n n="Tag" />
                                 <v n="Text">"// End at Top"</v>
                               </o>
                               <o>
-                                <v n="Id">775L</v>
+                                <v n="Id">1142L</v>
                                 <n n="Tag" />
                                 <v n="Text">"IF topComplete AND demoModeRun THEN"</v>
                               </o>
                               <o>
-                                <v n="Id">776L</v>
+                                <v n="Id">1143L</v>
                                 <n n="Tag" />
                                 <v n="Text">"	endAtTop := TRUE;"</v>
                               </o>
                               <o>
-                                <v n="Id">777L</v>
+                                <v n="Id">1144L</v>
                                 <n n="Tag" />
                                 <v n="Text">"ELSE"</v>
                               </o>
                               <o>
-                                <v n="Id">778L</v>
+                                <v n="Id">1145L</v>
                                 <n n="Tag" />
                                 <v n="Text">"	endAtTop := FALSE;"</v>
                               </o>
@@ -3942,10 +4176,10 @@ END_VAR
                         <v n="Extensible">false</v>
                       </o>
                       <o n="RValue" t="BoxTreeBox">
-                        <v n="BoxType">"fb_StateMachine"</v>
+                        <v n="BoxType">"FB_ManualStateMachine"</v>
                         <o n="Instance" t="Operand">
                           <v n="Operand">"demoState"</v>
-                          <v n="Type">"fb_StateMachine"</v>
+                          <v n="Type">"FB_ManualStateMachine"</v>
                           <v n="Comment">""</v>
                           <v n="SymbolComment">""</v>
                           <v n="Address">""</v>
@@ -4980,6 +5214,33 @@ END_VAR
         </NWL>
       </Implementation>
     </Action>
+    <Method Name="ServoInit" Id="{0ce3093f-d820-433c-860b-d979707e5791}">
+      <Declaration><![CDATA[METHOD ServoInit : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ServoMotion" Id="{a34ff9e2-f41e-46ec-a835-e7a7cb60ec05}">
+      <Declaration><![CDATA[METHOD ServoMotion : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="StateMachine" Id="{2f8dffc0-6f8a-4476-9e0d-6463e510b9ea}">
+      <Declaration><![CDATA[METHOD StateMachine : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <Action Name="syncAxis" Id="{de180c65-aa7e-485b-a509-efecb712f169}">
       <Implementation>
         <ST><![CDATA[CASE stServoInterface.ioAxisRef.NcToPlc.AxisState OF
@@ -5022,6 +5283,15 @@ ELSE
 END_IF]]></ST>
       </Implementation>
     </Action>
+    <LineIds Name="FB_ManualMotionControl.ServoInit">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ManualMotionControl.ServoMotion">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ManualMotionControl.StateMachine">
+      <LineId Id="5" Count="0" />
+    </LineIds>
     <LineIds Name="FB_ManualMotionControl.syncAxis">
       <LineId Id="4" Count="0" />
       <LineId Id="6" Count="0" />
